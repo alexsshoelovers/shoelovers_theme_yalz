@@ -1,0 +1,1 @@
+[19-Jun-2014 00:25:04 America/Los_Angeles] PHP Fatal error:  Call to undefined function add_action() in /home/philly12/public_html/mvpthemes/braxton/wp-content/themes/braxton/admin/theme-settings.php on line 3
