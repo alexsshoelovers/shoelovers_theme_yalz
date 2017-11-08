@@ -1206,7 +1206,7 @@ add_action( 'pre_get_posts', 'my_home_category' );
 
 
 function get_tag_ID($tag_name) {
-    $tag = get_term_by('name', $tag_name, 'post_tag');
+    $tag = get_term_by('slug', $tag_name, 'post_tag');
     if ($tag) {
         return $tag->term_id;
     } else {

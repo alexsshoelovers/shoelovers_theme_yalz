@@ -10,7 +10,7 @@
 
 
 
-<?php get_header();$global_home_tag_filter = get_option('mvp_slider_tags');$global_home_tag_filter_id = get_tag_ID(global_home_tag_filter); ?>
+<?php get_header();$global_home_tag_filter = get_option('mvp_slider_tags');$global_home_tag_filter_id = get_tag_ID($global_home_tag_filter); ?>
 <title>
 </title>
 	<?php $mvp_featured = get_option('mvp_featured_posts'); if ($mvp_featured == "true") { ?>
@@ -71,7 +71,7 @@
 
 							<?php } else { ?>
 
-								<?php $recent = new WP_Query('posts_per_page=1'); while($recent->have_posts()) : $recent->the_post(); $do_not_duplicate[] = $post->ID; if (isset($do_not_duplicate)) { ?>
+								<?php $recent = new WP_Query(array('posts_per_page' => 1, 'tag_id' =>$global_home_tag_filter_id )); while($recent->have_posts()) : $recent->the_post(); $do_not_duplicate[] = $post->ID; if (isset($do_not_duplicate)) { ?>
 
 									<a href="<?php the_permalink(); ?>" rel="bookmark">
 
@@ -121,14 +121,14 @@
 
 						<?php } else { ?>
 
-							<span class="top-header-contain"><h3><?php echo get_option('mvp_featured_left'); ?></h3></span>
+							<!-- <span class="top-header-contain"><h3><?php echo get_option('mvp_featured_left'); ?></h3></span> -->
 
 							<ul class="top-stories">
 
-								<?php if (!empty($do_not_duplicate)) { $current_category = get_option('mvp_featured_left'); $category_id = get_cat_ID($current_category); $recent = new WP_Query(array( 'cat' => $category_id, 'post__not_in' => $do_not_duplicate, 'posts_per_page' => '2'  )); while($recent->have_posts()) : $recent->the_post(); $do_not_duplicate[] = $post->ID; if (isset($do_not_duplicate)) { ?>
+								<?php if (!empty($do_not_duplicate)) { $current_category = get_option('mvp_featured_left'); $category_id = get_cat_ID($current_category); $recent = new WP_Query(array( 'tag_id' => $global_home_tag_filter_id, 'post__not_in' => $do_not_duplicate, 'posts_per_page' => '2'  )); while($recent->have_posts()) : $recent->the_post(); $do_not_duplicate[] = $post->ID; if (isset($do_not_duplicate)) { ?>
 
 								<li>
-
+                                    <span class="top-header-contain"><h3><?php $category = get_the_category(); echo $category[0]->cat_name; ?></h3></span>
 									<a href="<?php the_permalink(); ?>" rel="bookmark">
 
 									<?php if (  (function_exists('has_post_thumbnail')) && (has_post_thumbnail())  ) { ?>
@@ -173,14 +173,14 @@
 
 					<?php } else { ?>
 
-						<span class="top-header-contain"><h3><?php echo get_option('mvp_featured_right'); ?></h3></span>
+						<!-- <span class="top-header-contain"><h3><?php echo get_option('mvp_featured_right'); ?></h3></span> -->
 
 						<ul class="top-stories">
 
-							<?php if (!empty($do_not_duplicate)) { $current_category = get_option('mvp_featured_right'); $category_id = get_cat_ID($current_category); $recent = new WP_Query(array( 'cat' => $category_id, 'post__not_in' => $do_not_duplicate, 'posts_per_page' => '2'  )); while($recent->have_posts()) : $recent->the_post(); $do_not_duplicate[] = $post->ID; if (!empty($do_not_duplicate)) { ?>
+							<?php if (!empty($do_not_duplicate)) { $current_category = get_option('mvp_featured_right'); $category_id = get_cat_ID($current_category); $recent = new WP_Query(array( 'tag_id' => $global_home_tag_filter_id, 'post__not_in' => $do_not_duplicate, 'posts_per_page' => '2'  )); while($recent->have_posts()) : $recent->the_post(); $do_not_duplicate[] = $post->ID; if (!empty($do_not_duplicate)) { ?>
 
 							<li>
-
+                                <span class="top-header-contain"><h3><?php $category = get_the_category(); echo $category[0]->cat_name; ?></h3></span>
 								<a href="<?php the_permalink() ?>">
 
 								<?php if (  (function_exists('has_post_thumbnail')) && (has_post_thumbnail())  ) { ?>
@@ -837,7 +837,7 @@
 
 							<?php } endwhile; ?>
 
-							<?php if (isset($do_not_duplicate)) { $mvp_posts_num = get_option('mvp_posts_num'); $paged = (get_query_var('page')) ? get_query_var('page') : 1; query_posts(array( 'posts_per_page' => $mvp_posts_num, 'post__not_in'=>$do_not_duplicate, 'paged' =>$paged )); $adtimelineindex=-1; $adcounter=-1; if (have_posts()) : while (have_posts()) : the_post(); ?>
+							<?php if (isset($do_not_duplicate)) { $mvp_posts_num = get_option('mvp_posts_num'); $paged = (get_query_var('page')) ? get_query_var('page') : 1; query_posts(array( 'tag' => $global_home_tag_filter, 'posts_per_page' => $mvp_posts_num, 'post__not_in'=>$do_not_duplicate, 'paged' =>$paged )); $adtimelineindex=-1; $adcounter=-1; if (have_posts()) : while (have_posts()) : the_post(); ?>
 
                             <?php $adcounter=$adcounter+1 ;if($adcounter % 3 == 2) { $adtimelineindex=$adtimelineindex +1; ?>
                             <li class="infinite-post-ad" stlye="">
@@ -896,7 +896,7 @@
 
 						<?php } else { ?>
 
-							<?php $mvp_posts_num = get_option('mvp_posts_num'); $paged = (get_query_var('page')) ? get_query_var('page') : 1; query_posts(array( 'posts_per_page' => $mvp_posts_num, 'paged' =>$paged ));$adtimelineindex=-1; $adcounter=-1; if (have_posts()) : while (have_posts()) : the_post(); ?>
+							<?php $mvp_posts_num = get_option('mvp_posts_num'); $paged = (get_query_var('page')) ? get_query_var('page') : 1; query_posts(array( 'tag' => $global_home_tag_filter,'posts_per_page' => $mvp_posts_num, 'paged' =>$paged ));$adtimelineindex=-1; $adcounter=-1; if (have_posts()) : while (have_posts()) : the_post(); ?>
                                             <?php $adcounter=$adcounter+1 ;if($adcounter % 3 == 2) { $adtimelineindex=$adtimelineindex +1; ?>
                                             <li class="infinite-post-ad" stlye="">
                                                  <div class="ad_desktop ad_mobile" data-adunit="sl5_d_c_home_inline_300x250_77" data-dimensions="468x60,300x250,300x300,336x280" data-exclusions="adultcategory"></div>
@@ -976,7 +976,7 @@
 
 							<?php } endwhile; ?>
 
-							<?php if (isset($do_not_duplicate)) { $mvp_posts_num = get_option('mvp_posts_num'); $paged = (get_query_var('page')) ? get_query_var('page') : 1; query_posts(array( 'posts_per_page' => $mvp_posts_num, 'post__not_in'=>$do_not_duplicate, 'paged' =>$paged )); $adtimelineindex=-1; $adcounter=-1;if (have_posts()) : while (have_posts()) : the_post(); ?>
+							<?php if (isset($do_not_duplicate)) { $mvp_posts_num = get_option('mvp_posts_num'); $paged = (get_query_var('page')) ? get_query_var('page') : 1; query_posts(array( 'tag' => $global_home_tag_filter,'posts_per_page' => $mvp_posts_num, 'post__not_in'=>$do_not_duplicate, 'paged' =>$paged )); $adtimelineindex=-1; $adcounter=-1;if (have_posts()) : while (have_posts()) : the_post(); ?>
                                         <?php $adcounter=$adcounter+1 ;if($adcounter % 3 == 2) { $adtimelineindex=$adtimelineindex +1; ?>
                                         <li class="infinite-post-ad" stlye="">
                                              <div class="ad_desktop ad_mobile" data-adunit="sl5_d_c_home_inline_300x250_77" data-dimensions="468x60,300x250,300x300,336x280" data-exclusions="adultcategory"></div>
@@ -1032,7 +1032,7 @@
 
 						<?php } else { ?>
 
-							<?php $mvp_posts_num = get_option('mvp_posts_num'); $paged = (get_query_var('page')) ? get_query_var('page') : 1; query_posts(array( 'posts_per_page' => $mvp_posts_num, 'paged' =>$paged ));$adtimelineindex=-1; $adcounter=-1; if (have_posts()) : while (have_posts()) : the_post(); ?>
+							<?php $mvp_posts_num = get_option('mvp_posts_num'); $paged = (get_query_var('page')) ? get_query_var('page') : 1; query_posts(array('tag' => $global_home_tag_filter, 'posts_per_page' => $mvp_posts_num, 'paged' =>$paged ));$adtimelineindex=-1; $adcounter=-1; if (have_posts()) : while (have_posts()) : the_post(); ?>
                                         <?php $adcounter=$adcounter+1 ;if($adcounter % 3 == 2) { $adtimelineindex=$adtimelineindex +1; ?>
                                         <li class="infinite-post-ad" stlye="">
                                              <div class="ad_desktop ad_mobile" data-adunit="sl5_d_c_home_inline_300x250_77" data-dimensions="468x60,300x250,300x300,336x280" data-exclusions="adultcategory"></div>
@@ -1110,7 +1110,7 @@
 
 							<?php } endwhile; ?>
 
-							<?php if (isset($do_not_duplicate)) { $mvp_posts_num = get_option('mvp_posts_num'); $paged = (get_query_var('page')) ? get_query_var('page') : 1; query_posts(array( 'posts_per_page' => $mvp_posts_num, 'post__not_in'=>$do_not_duplicate, 'paged' =>$paged ));  $adtimelineindex=-1; $adcounter=-1; if (have_posts()) : while (have_posts()) : the_post(); ?>
+							<?php if (isset($do_not_duplicate)) { $mvp_posts_num = get_option('mvp_posts_num'); $paged = (get_query_var('page')) ? get_query_var('page') : 1; query_posts(array('tag' => $global_home_tag_filter, 'posts_per_page' => $mvp_posts_num, 'post__not_in'=>$do_not_duplicate, 'paged' =>$paged ));  $adtimelineindex=-1; $adcounter=-1; if (have_posts()) : while (have_posts()) : the_post(); ?>
                                             <?php $adcounter=$adcounter+1 ;if($adcounter % 3 == 2) { $adtimelineindex=$adtimelineindex +1; ?>
                                             <li class="infinite-post-ad" stlye="">
                                                  <div class="ad_desktop ad_mobile" data-adunit="sl5_d_c_home_inline_300x250_77" data-dimensions="468x60,300x250,300x300,336x280" data-exclusions="adultcategory"></div>
@@ -1168,7 +1168,7 @@ $url = $thumb['0']; ?>
 
 						<?php } else { ?>
 
-							<?php $mvp_posts_num = get_option('mvp_posts_num'); $paged = (get_query_var('page')) ? get_query_var('page') : 1; query_posts(array( 'posts_per_page' => $mvp_posts_num, 'paged' =>$paged )); $adtimelineindex=-1; $adcounter=-1;if (have_posts()) : while (have_posts()) : the_post(); ?>
+							<?php $mvp_posts_num = get_option('mvp_posts_num'); $paged = (get_query_var('page')) ? get_query_var('page') : 1; query_posts(array( 'tag' => $global_home_tag_filter_id,'posts_per_page' => $mvp_posts_num, 'paged' =>$paged )); $adtimelineindex=-1; $adcounter=-1;if (have_posts()) : while (have_posts()) : the_post(); ?>
                                             <?php $adcounter=$adcounter+1 ;if($adcounter % 3 == 2) { $adtimelineindex=$adtimelineindex +1; ?>
                                             <li class="infinite-post-ad" stlye="">
                                                 <div class="ad_desktop ad_mobile" data-adunit="sl5_d_c_home_inline_300x250_77" data-dimensions="468x60,300x250,300x300,336x280" data-exclusions="adultcategory"></div>
