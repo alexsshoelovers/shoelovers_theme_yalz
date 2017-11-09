@@ -1197,13 +1197,6 @@ function stopAdvancedExcerptOnFeeds()
 }
 add_action( 'pre_get_posts', 'stopAdvancedExcerptOnFeeds' );
 
-function my_home_category( $query ) {
- if ( $query->is_home() && $wp_the_query === $query ) {
- $query->set( 'cat', '19');
- }
-}
-add_action( 'pre_get_posts', 'my_home_category' );
-
 
 function get_tag_ID($tag_name) {
     $tag = get_term_by('slug', $tag_name, 'post_tag');
@@ -1213,6 +1206,5 @@ function get_tag_ID($tag_name) {
         return 0;
     }
 }
-
 
 ?>
